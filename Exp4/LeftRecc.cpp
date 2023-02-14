@@ -1,84 +1,47 @@
-#include <iostream>
-#include <vector>
-#include <string>
-using namespace std;
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#define SIZE 20
 
 int main()
 {
-    int n;
-    cout << "\nEnter number of non terminals: ";
-    cin >> n;
-    cout << "\nEnter non terminals one by one: ";
-    int i;
-    vector<string> nonter(n);
-    vector<int> leftrecr(n, 0);
-    for (i = 0; i < n; ++i)
+    char pro[SIZE], alpha[SIZE], beta[SIZE];
+    int nont_terminal,i,j, index=3;
+
+    printf("Enter the Production as E->E|A: ");
+    scanf("%s", pro);
+
+    nont_terminal=pro[0];
+    if(nont_terminal==pro[index]) //Checking if the Grammar is LEFT RECURSIVE
     {
-        cout << "\nNon terminal " << i + 1 << " : ";
-        cin >> nonter[i];
-    }
-    vector<vector<string>> prod;
-    cout << "\nEnter 'esp' for null";
-    for (i = 0; i < n; ++i)
-    {
-        cout << "\nNumber of " << nonter[i] << " productions: ";
-        int k;
-        cin >> k;
-        int j;
-        cout << "\nOne by one enter all " << nonter[i] << " productions";
-        vector<string> temp(k);
-        for (j = 0; j < k; ++j)
-        {
-            cout << "\nRHS of production " << j + 1 << ": ";
-            string abc;
-            cin >> abc;
-            temp[j] = abc;
-            if (nonter[i].length() <= abc.length() && nonter[i].compare(abc.substr(0, nonter[i].length())) == 0)
-                leftrecr[i] = 1;
-        }
-        prod.push_back(temp);
-    }
-    for (i = 0; i < n; ++i)
-    {
-        cout << leftrecr[i];
-    }
-    for (i = 0; i < n; ++i)
-    {
-        if (leftrecr[i] == 0)
-            continue;
-        int j;
-        nonter.push_back(nonter[i] + "'");
-        vector<string> temp;
-        for (j = 0; j < prod[i].size(); ++j)
-        {
-            if (nonter[i].length() <= prod[i][j].length() && nonter[i].compare(prod[i][j].substr(0, nonter[i].length())) == 0)
-            {
-                string abc = prod[i][j].substr(nonter[i].length(), prod[i][j].length() - nonter[i].length()) + nonter[i] + "'";
-                temp.push_back(abc);
-                prod[i].erase(prod[i].begin() + j);
-                --j;
-            }
-            else
-            {
-                prod[i][j] += nonter[i] + "'";
+        //Getting Alpha
+        for(i=++index,j=0;pro[i]!='|';i++,j++){
+            alpha[j]=pro[i];
+            //Checking if there is NO Vertical Bar (|)
+            if(pro[i+1]==0){
+                printf("This Grammar CAN'T BE REDUCED.\n");
+                exit(0); //Exit the Program
             }
         }
-        temp.push_back("esp");
-        prod.push_back(temp);
-    }
-    cout << "\n\n";
-    cout << "\nNew set of non-terminals: ";
-    for (i = 0; i < nonter.size(); ++i)
-        cout << nonter[i] << " ";
-    cout << "\n\nNew set of productions: ";
-    for (i = 0; i < nonter.size(); ++i)
-    {
-        int j;
-        for (j = 0; j < prod[i].size(); ++j)
+        alpha[j]='\0'; //String Ending NULL Character
+
+        if(pro[++i]!=0) //Checking if there is Character after Vertical Bar (|)
         {
-            cout << "\n"
-                 << nonter[i] << " -> " << prod[i][j];
+            //Getting Beta
+            for(j=i,i=0;pro[j]!='\0';i++,j++){
+                beta[i]=pro[j];
+            }
+            beta[i]='\0'; //String Ending NULL character
+
+            //Showing Output without LEFT RECURSION
+            printf("\nGrammar Without Left Recursion: \n\n");
+            printf(" %c->%s%c'\n", nont_terminal,beta,nont_terminal);
+            printf(" %c'->%s%c'|#\n", nont_terminal,alpha,nont_terminal);
         }
+        else
+            printf("This Grammar CAN'T be REDUCED.\n");
     }
-    return 0;
+    else
+        printf("\n This Grammar is not LEFT RECURSIVE.\n");
 }

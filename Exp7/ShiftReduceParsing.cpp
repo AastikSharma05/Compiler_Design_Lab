@@ -62,3 +62,27 @@ int main()
 	}
 	return 0;
 }
+/*
+sr_input.txt
+E->E+E
+E->E*E
+E->i
+
+Output
+
+Enter the Input String:
+i*i+i
+
+i
+E
+E*
+E*i
+E*E
+E
+E+
+E+i
+E+E
+E
+
+Accepted
+*/
